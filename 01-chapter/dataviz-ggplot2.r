@@ -24,7 +24,7 @@ ncol(mpg)
 
 glimpse(mpg)
 
-# Resposta: 234 linhas e 11 colunas.
+#R: 234 linhas e 11 colunas.
 
 #03 - O que a variável drv descreve? 
 
@@ -82,7 +82,7 @@ ggplot(data = df) +
 # - stroke: cor do contorno dos pontos.
 
 
-#Mapeamentos estéticos - exercícios/respostas
+#Mapeamentos estéticos - exercícios
 
 #01 - O que há de errado com este código? Por que os pontos não são azuis?
 
@@ -157,6 +157,129 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy)) + 
   facet_wrap(~ class, nrow = 2)
 
+#Adicionando duas variáveis utilizando o comando facet_grid()
+
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy)) + 
-  facet_wrap(~ cyl)
+  facet_grid(drv ~ cyl)
+
+---
+
+#Facetas - exercícios
+
+#01 - O que acontece se você facetar uma variável contínua?
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap (~ cty)
+
+#R: Nesse caso a variável é convertida em categórica e em cada faceta é possível
+#visualizar a dispersão dos dados para y = hwy e x = displ.
+
+#02 - O que significam as células vazias no gráfico facet_grid(drv ~ cyl)? 
+#Como eles se relacionam com esse enredo?
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = drv, y = cyl)) +
+  facet_grid(drv ~ cyl)
+
+#R: Significa que não existem observações coexistentes entre cyl e drv para as
+#categoria vazia, no caso, 5 e 4.
+
+#03 - Quais gráficos o código a seguir faz? O que .faz?
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+
+#R: Gráfico 1: é possível visualizar a relação entre as variáveis hwy e displ em
+#três categorias diferentes, sendo, 4, f e r. Quando utilizo '. ~' depois da
+#variável drv a visualização é plotada na horizontal, enquanto para '. ~' 
+#antes da variável plota a visualização na vertical.
+
+#04 - Quais são as vantagens de usar o facetamento em vez da estética da cor? 
+#R: Quais são as desvantagens? Como o equilíbrio poderia mudar se você tivesse 
+#um conjunto de dados maior?
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap (~ class)
+
+#R: As duas visualizações tem as mesma variável (class) para fins de classificação.
+#Na visualização com cor existe um problema para avaliar a dispersão dos dados
+#separadamente e comparar entre as variáveis, além das cores minivan e midsize
+#serem parecidas e não ser possível distinguir no gráfico.
+#Enquanto nas facetas é possível verificar separadamente cada uma das performances.
+#Porém quando existem muitos dados é quase impossível ter uma escala de cores para
+#cada variável, sendo necessário muitas vezes criar clusters das mesmas.
+
+#05 - Leia ?facet_wrap. O que nrow faz? O que ncol faz? Que outras opções controlam
+#R: O layout dos painéis individuais? Por que não facet_grid() tem nrow e 
+#ncolargumentos?
+
+??facet_wrap.
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_grid(.~class)
+
+#Necessário dois ??
+#R: nrow e ncol contam os números de linhas e colunas para as facetas.
+#A função facet_grid() tem como parâmetros os eixos que definem as dimensões do 
+#grid (linhas e colunas), os quais são especificados por meio de uma fórmula 
+#(uma string) com a seguinte estrutura: linhas ~ colunas. Por padrão, o número 
+#de linhas e colunas é determinado automaticamente com base no número de facets
+#a serem exibidos. No entanto, é possível especificar explicitamente o número 
+#de linhas e colunas usando os argumentos nrow e ncol. Em geral, é mais 
+#conveniente usar facet_grid() quando o número de facets é pequeno e conhecido. 
+#Já em casos em que há muitos facets, é recomendável usar facet_wrap().
+
+
+#06 - Ao usar facet_grid(), você geralmente deve colocar a variável 
+#R: Com níveis mais exclusivos nas colunas. Por que?
+
+#Haverá mais espaço para plotar os gráficos.
+
+---
+
+#Objetos Geométricos
+
+# left
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+# right
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy))  
+
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
+
+#Características geoms
+
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy)) 
+
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv))
+
+ggplot(data = mpg) +
+  geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv),
+    show.legend = FALSE
+  )
+
+#Exibir vários gráficos
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+
+#Aqui é possível ver um gráfico de dispersão juntamente com uma linha de tendência.
